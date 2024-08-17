@@ -5,7 +5,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import PythonExecutor from 'src/components/editors/PythonExecutor';
-import PythonTerminal from 'src/components/editors/PythonTerminal';
 // import WebGLApp from 'src/components/websimulator/Simulator';
 import {
   WebGLApp,
@@ -51,6 +50,7 @@ const BlocklyPage = () => {
   const [isSimulatorLoading, setIsSimulatorLoading] = useState(true); // Loading state of Simulator
   const [showVideoPlayer, setShowVideoPlayer] = useState(false);
   const [showDrawer, setShowDrawer] = useState(false);
+  const [projectFetched, setProjectFetched] = useState(false);
 
   const runScriptRef = useRef<() => Promise<void>>();
   const auth = useAuth();
@@ -113,9 +113,10 @@ const BlocklyPage = () => {
           const fetchedProject = await auth.getProjectByIdAction(Number(projectId));
           if (fetchedProject) {
             if (fetchedProject.code != '') {
+              setProjectFetched(true);
               setEditorValue(fetchedProject.code);
+              setProjectTitle(fetchedProject.name);
             }
-            setProjectTitle(fetchedProject.name);
           }
         } else {
           //setEditorValue( '<xml xmlns="https://developers.google.com/blockly/xml"></xml>');
@@ -129,8 +130,10 @@ const BlocklyPage = () => {
       }
     };
 
-    fetchProject();
-  }, [auth, projectId, editorValue, projectTitle, navigate]);
+    if (!projectFetched) {
+      fetchProject();
+    }
+  }, [auth, projectId, projectFetched]);
 
   useEffect(() => {
     if (location.pathname.endsWith('/blockly-tutorial-page')) {
