@@ -2,35 +2,59 @@ import { Box, Button, Grid, Slider, useMediaQuery } from '@mui/material';
 import React, { useRef, useEffect, useImperativeHandle, forwardRef, useState } from 'react';
 import { scene, camera, renderer } from './scene.js';
 import { ambientLight, directionalLight } from './environment_lights.js';
-import { plane, updateTexture} from './floor_loader.js';
+import { plane, updateTexture } from './floor_loader.js';
 import { loadBaseObject } from './robot_loader.js';
-import { startAnimation, stopAnimation, stopMotion, moveStep, rotateStep, controls, rgb_set_color, changeCamera, just_rotate, just_move, drawLine } from './animate.js';
+import {
+  startAnimation,
+  stopAnimation,
+  stopMotion,
+  moveStep,
+  rotateStep,
+  controls,
+  rgb_set_color,
+  changeCamera,
+  just_rotate,
+  just_move,
+  drawLine,
+} from './animate.js';
 import { loadObjectsFromJSON, robot_position } from './stage_loader.js';
-import { faMap, faArrowUp, faArrowDown, faArrowLeft, faArrowRight, faBinoculars, faLightbulb, faRefresh } from '@fortawesome/free-solid-svg-icons';
+import {
+  faMap,
+  faArrowUp,
+  faArrowDown,
+  faArrowLeft,
+  faArrowRight,
+  faBinoculars,
+  faLightbulb,
+  faRefresh,
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { get_distance, get_acceleration, get_gyroscope, get_floor_sensor, get_light_sensor, traceLine } from './sensors.js';
+import {
+  get_distance,
+  get_acceleration,
+  get_gyroscope,
+  get_floor_sensor,
+  get_light_sensor,
+  traceLine,
+} from './sensors.js';
 import * as THREE from 'three';
 import CardDialog from 'src/components/stage-select-popup/CardDialog'; // Import the CardDialog component
 
 type WebGLAppProps = {
   appsessionId: string;
   onMountChange: (isMounted: boolean) => void;
+  stageUrl: string;
 };
 
-
-
-
-
-const WebGLApp = forwardRef(({ appsessionId, onMountChange }: WebGLAppProps, ref) => {
+const WebGLApp = forwardRef(({ appsessionId, onMountChange, stageUrl }: WebGLAppProps, ref) => {
   const mountRef = useRef<HTMLDivElement | null>(null);
   const [lightIntensity, setLightIntensity] = useState(100);
-  const [currentURL, setCurrentURL] = useState('/js-simulator/stages/stage_white_rect.json');
+  const [currentURL, setCurrentURL] = useState(stageUrl);
 
   useImperativeHandle(ref, () => ({
-
     setDirectionalLightIntensity: (intensity: number) => {
       changeDirectionalLightIntensity(intensity);
-    }
+    },
   }));
 
   const changeDirectionalLightIntensity = (intensity: number) => {
@@ -50,8 +74,6 @@ const WebGLApp = forwardRef(({ appsessionId, onMountChange }: WebGLAppProps, ref
 
     resetScene(currentURL);
 
-    
-
     const handleResize = () => {
       if (currentMountRef) {
         const { clientWidth, clientHeight } = currentMountRef;
@@ -66,7 +88,6 @@ const WebGLApp = forwardRef(({ appsessionId, onMountChange }: WebGLAppProps, ref
       currentMountRef.appendChild(renderer.domElement);
     }
 
-    
     window.addEventListener('resize', handleResize);
 
     startAnimation();
@@ -104,11 +125,8 @@ const WebGLApp = forwardRef(({ appsessionId, onMountChange }: WebGLAppProps, ref
     changeCamera();
   };
 
- 
-
-
-   // New state for dialog
-   const [openDialog, setOpenDialog] = useState(false);
+  // New state for dialog
+  const [openDialog, setOpenDialog] = useState(false);
 
   // Dialog handler functions
   const handleOpenDialog = () => {
@@ -120,7 +138,6 @@ const WebGLApp = forwardRef(({ appsessionId, onMountChange }: WebGLAppProps, ref
   };
 
   const handleCardSelect = (url: string) => {
-    
     setCurrentURL(url);
     setOpenDialog(false); // Close the dialog after selecting a card
   };
@@ -131,23 +148,28 @@ const WebGLApp = forwardRef(({ appsessionId, onMountChange }: WebGLAppProps, ref
       rgb_set_color('off');
       drawLine(false);
     }
-  
+
     ambientLight.name = 'ambientLight';
     scene.add(ambientLight);
     directionalLight.name = 'directionalLight';
     scene.add(directionalLight);
-  
+
     scene.add(traceLine);
-  
+
     loadObjectsFromJSON(currentURL, scene);
-  
+
     loadBaseObject(scene);
   };
 
-
-
   return (
-    <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" height="100%" width="100%">
+    <Box
+      display="flex"
+      flexDirection="column"
+      alignItems="center"
+      justifyContent="center"
+      height="100%"
+      width="100%"
+    >
       <div ref={mountRef} style={{ width: '100%', height: '100%' }} />
       <Box mt={2} width="100%">
         <Grid container spacing={2} justifyContent="center">
@@ -191,7 +213,7 @@ const WebGLApp = forwardRef(({ appsessionId, onMountChange }: WebGLAppProps, ref
       <Box mt={2} width="80%">
         <Grid container spacing={2} alignItems="center" justifyContent="center">
           <Grid item>
-            <FontAwesomeIcon icon={faLightbulb} size="2x" color='primary' />
+            <FontAwesomeIcon icon={faLightbulb} size="2x" color="primary" />
           </Grid>
           <Grid item xs>
             <Slider
@@ -205,9 +227,23 @@ const WebGLApp = forwardRef(({ appsessionId, onMountChange }: WebGLAppProps, ref
           </Grid>
         </Grid>
       </Box>
-      <CardDialog  open={openDialog} onClose={handleCloseDialog} onSelect={handleCardSelect} />
+      <CardDialog open={openDialog} onClose={handleCloseDialog} onSelect={handleCardSelect} />
     </Box>
   );
 });
 
-export { WebGLApp, moveStep, rotateStep, stopMotion, get_distance, rgb_set_color, get_acceleration, get_gyroscope, get_floor_sensor, just_move, just_rotate, get_light_sensor, drawLine};
+export {
+  WebGLApp,
+  moveStep,
+  rotateStep,
+  stopMotion,
+  get_distance,
+  rgb_set_color,
+  get_acceleration,
+  get_gyroscope,
+  get_floor_sensor,
+  just_move,
+  just_rotate,
+  get_light_sensor,
+  drawLine,
+};

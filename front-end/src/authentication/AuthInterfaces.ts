@@ -40,6 +40,7 @@ export interface NewProjectData {
 }
 
 export interface Project {
+    track: string;
     id: number;
     name: string;
     description: string;
