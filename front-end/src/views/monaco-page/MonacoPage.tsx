@@ -182,6 +182,7 @@ const MonacoPage: React.FC = () => {
           description: projectDescription,
           project_type: 'blockly',
           code: editorValue,
+          track: stageUrl,
         });
         if (project) {
           handleShowSuccessAlert(t('alertMessages.projectUpdated'));
