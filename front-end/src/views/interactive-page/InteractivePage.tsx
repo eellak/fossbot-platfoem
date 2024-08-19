@@ -26,6 +26,8 @@ const InteractivePage = () => {
   const [isSimulatorLoading, setIsSimulatorLoading] = useState(true);
   const [videoBoxKey, setVideoBoxKey] = useState(uuidv4());
   const location = useLocation();
+  const [stageUrl, setStageUrl] = useState('/js-simulator/stages/stage_white_rect.json');
+
 
   const isResponsive = useMediaQuery('(max-width:1024px)');
 
@@ -64,7 +66,7 @@ const InteractivePage = () => {
         >
           <Grid width={"100%"} item xs={7} lg={7}>
             <Box height="70vh">
-              <WebGLApp appsessionId={sessionId} onMountChange={handleMountChange} />
+              <WebGLApp appsessionId={sessionId} onMountChange={handleMountChange} stageUrl={stageUrl} />
             </Box>
           </Grid>
 

@@ -51,6 +51,7 @@ const BlocklyPage = () => {
   const [isSimulatorLoading, setIsSimulatorLoading] = useState(true); // Loading state of Simulator
   const [showVideoPlayer, setShowVideoPlayer] = useState(false);
   const [showDrawer, setShowDrawer] = useState(false);
+  const [stageUrl, setStageUrl] = useState('/js-simulator/stages/stage_white_rect.json');
 
   const runScriptRef = useRef<() => Promise<void>>();
   const auth = useAuth();
@@ -115,7 +116,11 @@ const BlocklyPage = () => {
             if (fetchedProject.code != '') {
               setEditorValue(fetchedProject.code);
             }
+            if(fetchedProject.track){
+              setStageUrl(fetchedProject.track)
+            }
             setProjectTitle(fetchedProject.name);
+            
           }
         } else {
           //setEditorValue( '<xml xmlns="https://developers.google.com/blockly/xml"></xml>');
@@ -178,6 +183,7 @@ const BlocklyPage = () => {
           description: projectDescription,
           project_type: 'blockly',
           code: editorValue,
+          track: stageUrl,
         });
         if (project) {
           handleShowSuccessAlert(t('alertMessages.projectUpdated'));
@@ -337,7 +343,11 @@ const BlocklyPage = () => {
               )}
 
               <Box height="50vh">
-                <WebGLApp appsessionId={sessionId} onMountChange={handleMountChange} />
+                <WebGLApp
+                  appsessionId={sessionId}
+                  onMountChange={handleMountChange}
+                  stageUrl={stageUrl}
+                />
               </Box>
               <br />
 

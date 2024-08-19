@@ -71,6 +71,7 @@ const MonacoPage: React.FC = () => {
   const navigate = useNavigate();
   const { projectId } = useParams<{ projectId: string }>();
   const [isInPIP, setIsInPIP] = useState(false);
+  const [stageUrl, setStageUrl] = useState('/js-simulator/stages/stage_white_rect.json');
 
   const isColumn = useMediaQuery('(max-width:1024px)');
 
@@ -133,6 +134,9 @@ const MonacoPage: React.FC = () => {
             setEditorValue(fetchedProject.code);
             setProjectTitle(fetchedProject.name);
             setProjectDescription(fetchedProject.description);
+            if (fetchedProject.track) {
+              setStageUrl(fetchedProject.track);
+            }
           }
         } else {
           setEditorValue(textart);
@@ -178,6 +182,7 @@ const MonacoPage: React.FC = () => {
           description: projectDescription,
           project_type: 'blockly',
           code: editorValue,
+          track: stageUrl,
         });
         if (project) {
           handleShowSuccessAlert(t('alertMessages.projectUpdated'));
@@ -376,7 +381,11 @@ const MonacoPage: React.FC = () => {
               )}
 
               <Box height="50vh">
-                <WebGLApp appsessionId={sessionId} onMountChange={handleMountChange} />
+                <WebGLApp
+                  appsessionId={sessionId}
+                  onMountChange={handleMountChange}
+                  stageUrl={stageUrl}
+                />
               </Box>
 
               <Box

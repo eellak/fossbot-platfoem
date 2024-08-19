@@ -73,6 +73,7 @@ const NewProjectForm = ({ isDescriptionDisabled, editorInitialValue, code }: New
           description: description,
           project_type: selectedOption,
           code: code,
+          track:'/js-simulator/stages/stage_white_rect.json' //Add a default on db when create a project
         });
 
         const monacoPageUrl = `/monaco-page/${projectID}`;
