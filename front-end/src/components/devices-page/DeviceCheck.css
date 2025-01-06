@@ -1,0 +1,23 @@
+.device-error {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 20px;
+    text-align: center;
+    z-index: 1000;
+    font-family: Arial, sans-serif;
+  }
+  
+  .device-error h1 {
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  .device-error p {
+    font-size: 16px;
+    margin: 10px 0;
+  }
+  
